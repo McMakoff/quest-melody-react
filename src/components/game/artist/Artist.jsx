@@ -26,7 +26,7 @@ export default class Artist extends Component {
           />
         </div>
         <form className="game__artist">
-          {question.answers.map((item, i) => (
+          {question.answers.map((item) => (
             <div className="artist" key={`${item.id}`}>
               <input
                 onChange={onAnswer}
