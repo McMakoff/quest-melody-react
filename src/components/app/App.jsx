@@ -1,14 +1,36 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Welcome from '../welcome/Welcome';
+import {questions} from "../../mocks/questions";
+import Layout from "../game/layout/Layout";
 
-const App = (props) => {
-  const {mistakes, gameTime} = props;
-  return (
-    <Welcome
-      mistakes={mistakes}
-      gameTime={gameTime}
-    />
-  );
-};
+export default class App extends Component {
+  constructor(props) {
+    super(props);
 
-export default App;
+    this.state = {
+      question: -1,
+    };
+  }
+
+  handlerQuestionChange() {
+    this.setState((prevState) => {
+      const nextIndex = prevState.question + 1;
+      const isEnd = nextIndex >= questions.length;
+      return {
+        question: isEnd ? -1 : nextIndex,
+      };
+    });
+  }
+  renderScreen() {
+    const {question} = this.state;
+    if (question === -1) {
+      return <Welcome handleClick={() => this.handlerQuestionChange()}/>;
+    } else {
+      return <Layout question={question} answerCb={() => this.handlerQuestionChange}/>;
+    }
+  }
+
+  render() {
+    return this.renderScreen();
+  }
+}
