@@ -6,6 +6,7 @@ export default class Welcome extends Component {
   render() {
     const {handleClick} = this.props;
     const {gameTime, mistakes} = settings;
+
     return (
       <section className="welcome">
         <div className="welcome__logo">

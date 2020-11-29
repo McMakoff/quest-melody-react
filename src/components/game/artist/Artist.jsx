@@ -29,7 +29,7 @@ export default class Artist extends Component {
           {question.answers.map((item) => (
             <div className="artist" key={`${item.id}`}>
               <input
-                onChange={onAnswer}
+                onChange={onAnswer(`${item.artist}`)}
                 className="artist__input visually-hidden"
                 type="radio"
                 name="answer"
