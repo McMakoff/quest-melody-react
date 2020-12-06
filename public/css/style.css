@@ -1164,7 +1164,11 @@ img {
   width: 35px;
   height: 49px;
   background-image: url("../img/sprite.png");
-  background-position: -5px -182px; }
+  background-position: -5px -64px; }
+
+.wrong.__empty {
+  background-position-y: -182px;
+}
 
 .result__genre {
   margin: 0;

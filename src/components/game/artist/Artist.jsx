@@ -1,14 +1,42 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import AudioPlayer from "../audioPlayer/AudioPlayer";
+import {connect} from "react-redux";
+import {actionCreator} from "../../../reducer";
 
-export default class Artist extends Component {
+const mapStateToProps = (state, ownProps) => {
+  return (
+    Object.assign({}, ownProps, {
+      time: state.time,
+    })
+  );
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onChangeTime: (time) => dispatch(actionCreator.decrementTime(time)),
+});
+
+class Artist extends Component {
   constructor(props) {
     super(props);
+
+    this.timer = null;
 
     this.state = {
       isPlaying: false
     };
+  }
+
+  componentDidMount() {
+    const {onChangeTime, time} = this.props;
+
+    this.timer = window.setInterval(() => {
+      onChangeTime(time);
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   render() {
@@ -29,7 +57,7 @@ export default class Artist extends Component {
           {question.answers.map((item) => (
             <div className="artist" key={`${item.id}`}>
               <input
-                onChange={onAnswer(`${item.artist}`)}
+                onChange={() => onAnswer(`${item.artist}`)}
                 className="artist__input visually-hidden"
                 type="radio"
                 name="answer"
@@ -51,4 +79,8 @@ export default class Artist extends Component {
 Artist.propTypes = {
   question: PropTypes.object,
   onAnswer: PropTypes.func,
+  onChangeTime: PropTypes.func,
+  time: PropTypes.number,
 };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Artist);

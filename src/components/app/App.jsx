@@ -15,23 +15,15 @@ const mapStateToProps = (state, ownProps) => {
       lives: state.lives,
     })
   );
-}
-
-/*const mapDispatchToProps = (dispatch) => ({
-  handleScreenClick: () => {
-    return dispatch(actionCreator.incrementStep(mapStateToProps.step, questions));
-  },
-});*/
-
-const mergeProps = (stateProps, dispatchProps) => {
-  const {step} = stateProps;
-  const {dispatch} = dispatchProps;
-
-  return {
-    step,
-    handleScreenClick: () => dispatch(actionCreator.incrementStep(step, questions)),
-  };
 };
+
+const mapDispatchToProps = (dispatch) => ({
+  onWelcomeClick: (step, data, lives) => dispatch(actionCreator.incrementStep(step, data, lives)),
+  onUserAnswer: (userAnswer, data, lives, step) => {
+    dispatch(actionCreator.incrementStep(step, data));
+    dispatch(actionCreator.decrementLives(userAnswer, data, lives, step));
+  },
+});
 
 class App extends Component {
   constructor(props) {
@@ -39,43 +31,47 @@ class App extends Component {
   }
 
   getGameScreen() {
-    const {handleScreenClick, step} = this.props;
+    const {onUserAnswer, step, lives} = this.props;
+    const question = questions[step];
 
-    switch (questions[step].type) {
+    switch (question.type) {
       case `artist`:
         return (
           <Artist
-            question={questions[step]}
-            onAnswer={() => handleScreenClick()}
+            question={question}
+            onAnswer={(userAnswer) => onUserAnswer(userAnswer, questions, lives, step)}
           />
         );
 
       case `genre`:
         return (
           <Genre
-            question={questions[step]}
-            onAnswer={() => handleScreenClick()}
+            question={question}
+            onAnswer={(userAnswer) => onUserAnswer(userAnswer, questions, lives, step)}
           />
         );
     }
+
+    return null;
   }
 
   renderGameScreen() {
-    const {type} = questions[this.props.step];
+    const {step, lives} = this.props;
+    const type = questions[step].type;
 
     return (
       <section className={`game game--${type === `genre` ? type : `artist`}`}>
-        <Header/>
+        <Header lives={lives} />
         {this.getGameScreen()}
       </section>
     );
   }
 
   render() {
-    const {step, handleScreenClick} = this.props;
+    const {step, onWelcomeClick} = this.props;
 
     if (step === -1) {
-      return <Welcome handleClick={() => handleScreenClick()}/>;
+      return <Welcome handleClick={() => onWelcomeClick(step, questions)}/>;
     } else {
       return this.renderGameScreen();
     }
@@ -85,7 +81,8 @@ class App extends Component {
 App.propTypes = {
   lives: PropTypes.number,
   step: PropTypes.number,
-  handleScreenClick: PropTypes.func,
-}
+  onUserAnswer: PropTypes.func,
+  onWelcomeClick: PropTypes.func,
+};
 
-export default connect(mapStateToProps, null, mergeProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

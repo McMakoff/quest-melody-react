@@ -7,8 +7,6 @@ export default class AudioPlayer extends Component {
 
     this.audioRef = React.createRef();
 
-    this.playButtonClickHandler = this.playButtonClickHandler.bind(this);
-
     this.state = {
       isLoading: false,
       isPlaying: this.props.isPlaying,
@@ -57,7 +55,7 @@ export default class AudioPlayer extends Component {
           className={`track__button track__button--${!isPlaying ? `play` : `pause`}`}
           type="button"
           disabled={isLoading}
-          onClick={this.playButtonClickHandler}
+          onClick={() => this.playButtonClickHandler()}
         />
         <div className="track__status">
           <audio
