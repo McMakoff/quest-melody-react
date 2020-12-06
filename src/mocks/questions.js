@@ -154,4 +154,5 @@ export const questions = [
 export const settings = {
   mistakes: 3,
   gameTime: 5,
+  timeInterval: 1000,
 };

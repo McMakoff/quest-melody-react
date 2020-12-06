@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import AudioPlayer from "../audioPlayer/AudioPlayer";
 import {connect} from "react-redux";
 import {actionCreator} from "../../../reducer";
+import {settings} from "../../../mocks/questions";
 
 const mapStateToProps = (state, ownProps) => {
   return (
@@ -32,7 +33,7 @@ class Artist extends Component {
 
     this.timer = window.setInterval(() => {
       onChangeTime(time);
-    }, 1000);
+    }, settings.timeInterval);
   }
 
   componentWillUnmount() {
